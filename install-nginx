@@ -1,0 +1,44 @@
+===============================Install-Nginx-Via-Playbook=====================================================
+On ansible-control-node/master in /home/ansadmin/playbook create
+vim nginx-install.yml
+
+---
+- name: nginx install & start services
+  hosts: all
+  become: true
+
+  tasks:
+  - name: install nginx
+    yum:
+      name: nginx
+      state: latest
+
+  - name: start nginx
+    service:
+      name: nginx
+      state: started
+
+then create  host file on which we want to configure nginx and put that hosts priv ip by getting ip from ifconfig-a
+
+then go-on-host
+sudo su -
+useradd ansadmin
+passwd ansadmin
+
+then visudo
+ansadmin ALL=(ALL) NOPASSWD:ALL
+
+THEN
+vi /etc/ssh/sshd_config
+#PasswordAuthentication no
+PasswordAuthentication yes
+then
+service sshd restart
+
+then go On ansible-control-node/master in /home/ansadmin/playbook
+cd /home/ansadmin check ls -al to check .ssh is present if so
+ssh-copy-id host-pri-ip
+once added successfully
+Run
+ansible-playbook -i hosts nginx.yml   ##it will install on host we mentioned in hosts file
+				      ## you can check on browser host-pub-ip:80 you will see nginx page
