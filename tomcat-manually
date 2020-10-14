@@ -1,0 +1,22 @@
+Install Tomcat-server
+first create ec2-instance rhel8 with sec port open 8080,22,80
+
+sudo su -
+yum install java
+cd /usr/local
+https://tomcat.apache.org/download-80.cgi
+wget https://mirrors.estointernet.in/apache/tomcat/tomcat-8/v8.5.59/bin/apache-tomcat-8.5.59.tar.gz
+ll
+total 10188
+-rw-r--r--. 1 root root 10432020 Oct  6 17:31 apache-tomcat-8.5.59.tar.gz
+
+tar -xvzf /usr/local/apache-tomcat-8.5.59.tar.gz
+ll
+cd apache-tomcat-8.5.59
+cd bin/
+ll
+ps -ef | grep tomcat
+./startup.sh
+ps -ef | grep tomcat
+then check on browser dns-of-tomact-server:8080
+you see tomcat page
