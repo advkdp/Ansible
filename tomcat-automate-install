@@ -1,0 +1,55 @@
+##Now we automate this by writing ansible playbook so
+--------------------------------------------------------------------------------------------------------------
+##******Note:- 
+
+To run playbook we use path /etc/ansible/hosts cause we have put priv ip (find by ifconfig -a) in this default path if you want to run on current path like ansible-playbook -i /hosts tomcat-setup.yml then you have to set that path in
+
+default config file use by ansible i.e /etc/ansible/ansible.cfg
+
+uncomment inventory = put path where u want to keep hosts file
+e.g       inventory = /home/ansadmin/hosts save & then goto cd /home/ansadmin create file hosts put ips of hosts
+& then on path /home/ansadmin run command ansible-playbook -i /hosts tomcat-setup.yml it will work
+
+                                                                                                ##******Note
+
+--------------------------------------------------------------------------------------------------------------
+
+now on ansible mast server where ansible installed
+su - ansadmin
+pwd
+/home/ansadmin
+mkdir playbooks
+cd playbooks
+
+vim tomcat-setup.yml
+
+---
+- name: install tomcat server
+  hosts: all
+  become: true
+
+  tasks:
+  - name: install java
+    yum:
+      name: java
+      state: latest
+
+  - name: download tomcat server packages
+    get_url:
+      url: https://mirrors.estointernet.in/apache/tomcat/tomcat-8/v8.5.59/bin/apache-tomcat-8.5.59.tar.gz
+      dest: /usr/local
+
+  - name: extract tomcat packages
+    unarchive:
+      src: /usr/local/apache-tomcat-8.5.59.tar.gz
+      dest: /usr/local
+      remote_src: yes
+
+  - name: start tomcat services
+    shell: nohup /usr/local/apache-tomcat-8.5.59/bin/startup.sh
+
+To check syntax
+ansible-playbook -i /etc/ansible/hosts tomcat-setup.yml --check
+
+To run playbook
+ansible-playbook -i /etc/ansible/hosts tomcat-setup.yml
