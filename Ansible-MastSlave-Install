@@ -1,0 +1,62 @@
+sudo su -  // as a root
+yum install python3 -y
+alternatives --set python /usr/bin/python3
+python --version
+yum -y install python3-pip
+useradd ansadmin
+passwd ansadmin
+visudo
+below ec2-user
+ansadmin ALL=(ALL) NOPASSWD: ALL
+
+vi /etc/ssh/sshd_config
+check #PasswordAuthentication no
+uncheck PasswordAuthentication yes
+service sshd restart
+
+su - ansadmin
+sudo pip3 install ansible --user
+ansible --version
+ssh-keygen
+ssh-copy-id ansadmin@private-ip-hostserver
+or as you already login as ansadmin you can also do
+ssh-copy-id priv-ip-host-server  // you can find ip on host by ifconfig -a
+
+sudo vi /etc/ansible/hosts
+put priv ip of host servers
+
+after above steps first configure host server
+
+on host server
+sudo su -
+useradd ansadmin
+passwd ansadmin
+
+visudo
+below ec2-user
+ansadmin ALL=(ALL) NOPASSWD: ALL
+
+vi /etc/ssh/sshd_config
+check #PasswordAuthentication no
+uncheck PasswordAuthentication yes
+service sshd restart
+
+su - ansadmin
+pwd
+/home/ansadmin
+
+ifconfig -a to find priv ip of server
+
+Run then Below commands on Ansible-master server
+ansible all -m ping
+o/p
+ping:pong
+
+su - ansadmin
+go to cd /home/ansadmin
+echo "<h1> Hello Everyone This is Badal-Cloud-compute </h1>" > hello.html
+ansible all -m copy -a "src=/home/ansadmin/hello.html dest=/home/ansadmin/"
+
+& check on host's /home/ansadmin path by ll you find hello.html file
+============================================================================
+
